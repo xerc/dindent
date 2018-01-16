@@ -116,6 +116,7 @@ class Indenter {
             $rules = array('NO', 'DECREASE', 'INCREASE', 'DISCARD');
 
             foreach ($patterns as $pattern => $rule) {
+                $space_padding = '';
                 if ($match = preg_match($pattern, $subject, $matches)) {
                     $this->log[] = array(
                         'rule' => $rules[$rule],
@@ -131,7 +132,8 @@ class Indenter {
                     }
 
                     if ($rule === static::MATCH_INDENT_NO) {
-
+                        if($last_rule == static::MATCH_NO_NEWLINE)
+                            $space_padding = ' ';
                     } else if ($rule === static::MATCH_INDENT_DECREASE) {
                         $next_line_indentation_level--;
                         $indentation_level--;
@@ -147,17 +149,20 @@ class Indenter {
 
                     if ($rule !== static::MATCH_NO_NEWLINE){
                         if($noindent_next_match){
-                            $output .= $matchtext . "\n";
+                            $output .= $space_padding.$matchtext . "\n";
                             $noindent_next_match = false;
                         }else{
-                            $output .= str_repeat($this->options['indentation_character'], $indentation_level) . $matchtext . "\n";
+                            $output .= str_repeat($this->options['indentation_character'], $indentation_level) . $space_padding . $matchtext . "\n";
                         }
                     }else{
-                        $output = trim($output);
-                        $output .= $matchtext;
+                        $output = rtrim($output);
+                        if($last_rule == static::MATCH_INDENT_NO)
+                            $output .= ' '.trim($matchtext);
+                        else
+                            $output .= trim($matchtext);
                         $noindent_next_match = true;
                     }
-
+                    $last_rule = $rule;
                     break;
                 }
             }
