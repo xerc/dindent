@@ -1,5 +1,5 @@
 <?php
-class IndenterTest extends PHPUnit_Framework_TestCase {
+class IndenterTest extends \PHPUnit\Framework\TestCase {
     /**
      * @expectedException Gajus\Dindent\Exception\InvalidArgumentException
      * @expectedExceptionMessage Unrecognized option.

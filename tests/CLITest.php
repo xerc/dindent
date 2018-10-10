@@ -1,5 +1,5 @@
 <?php
-class CLITest extends PHPUnit_Framework_TestCase {
+class CLITest extends \PHPUnit\Framework\TestCase {
     public function testMissingInputParameter () {
         $this->assertSame('Missing "input" parameter.', static::exec('--foo'));
     }
