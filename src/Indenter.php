@@ -22,7 +22,6 @@ class Indenter {
     const MATCH_INDENT_DECREASE = 1;
     const MATCH_INDENT_INCREASE = 2;
     const MATCH_DISCARD = 3;
-    const MATCH_NO_NEWLINE = 4;
 
     /**
      * @param array $options
@@ -88,7 +87,6 @@ class Indenter {
         $output = '';
 
         $next_line_indentation_level = 0;
-        $noindent_next_match = false;
 
         do {
             $indentation_level = $next_line_indentation_level;
@@ -111,7 +109,7 @@ class Indenter {
                 // whitespace
                 '/^(\s+)/' => static::MATCH_DISCARD,
                 // text node
-                '/([^<]+)/' => static::MATCH_NO_NEWLINE
+                '/([^<]+)/' => static::MATCH_INDENT_NO
             );
             $rules = array('NO', 'DECREASE', 'INCREASE', 'DISCARD');
 
@@ -143,20 +141,7 @@ class Indenter {
                         $indentation_level = 0;
                     }
 
-                    $matchtext = $matches[0];
-
-                    if ($rule !== static::MATCH_NO_NEWLINE){
-                        if($noindent_next_match){
-                            $output .= $matchtext . "\n";
-                            $noindent_next_match = false;
-                        }else{
-                            $output .= str_repeat($this->options['indentation_character'], $indentation_level) . $matchtext . "\n";
-                        }
-                    }else{
-                        $output = trim($output);
-                        $output .= $matchtext;
-                        $noindent_next_match = true;
-                    }
+                    $output .= str_repeat($this->options['indentation_character'], $indentation_level) . $matches[0] . "\n";
 
                     break;
                 }
