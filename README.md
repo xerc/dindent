@@ -1,9 +1,9 @@
 # Dindent
 
-[![Build Status](https://travis-ci.org/schleuse/dindent.png?branch=master)](https://travis-ci.org/schleuse/dindent)
-[![Coverage Status](https://coveralls.io/repos/schleuse/dindent/badge.png?branch=master)](https://coveralls.io/r/schleuse/dindent?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/schleuse/dindent/version.png)](https://packagist.org/packages/schleuse/dindent)
-[![License](https://poser.pugx.org/schleuse/dindent/license.png)](https://packagist.org/packages/schleuse/dindent)
+[![Build Status](https://travis-ci.org/Schleuse/dindent.png?branch=master)](https://travis-ci.org/Schleuse/dindent)
+[![Coverage Status](https://coveralls.io/repos/Schleuse/dindent/badge.png?branch=master)](https://coveralls.io/r/Schleuse/dindent?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/Schleuse/dindent/version.png)](https://packagist.org/packages/Schleuse/dindent)
+[![License](https://poser.pugx.org/Schleuse/dindent/license.png)](https://packagist.org/packages/Schleuse/dindent)
 
 Dindent (aka., "HTML beautifier") will indent HTML for development and testing. Dedicated for those who suffer from reading a template engine produced markup.
 
@@ -206,7 +206,7 @@ The recommended way to use Dindent is through [Composer](https://getcomposer.org
 ```json
 {
     "require": {
-        "schleuse/dindent": "2.*"
+        "Schleuse/dindent": "2.*"
     }
 }
 ```
