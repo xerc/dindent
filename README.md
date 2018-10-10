@@ -1,9 +1,9 @@
 # Dindent
 
-[![Build Status](https://travis-ci.org/gajus/dindent.png?branch=master)](https://travis-ci.org/gajus/dindent)
-[![Coverage Status](https://coveralls.io/repos/gajus/dindent/badge.png?branch=master)](https://coveralls.io/r/gajus/dindent?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/gajus/dindent/version.png)](https://packagist.org/packages/gajus/dindent)
-[![License](https://poser.pugx.org/gajus/dindent/license.png)](https://packagist.org/packages/gajus/dindent)
+[![Build Status](https://travis-ci.org/schleuse/dindent.png?branch=master)](https://travis-ci.org/schleuse/dindent)
+[![Coverage Status](https://coveralls.io/repos/schleuse/dindent/badge.png?branch=master)](https://coveralls.io/r/schleuse/dindent?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/schleuse/dindent/version.png)](https://packagist.org/packages/schleuse/dindent)
+[![License](https://poser.pugx.org/schleuse/dindent/license.png)](https://packagist.org/packages/schleuse/dindent)
 
 Dindent (aka., "HTML beautifier") will indent HTML for development and testing. Dedicated for those who suffer from reading a template engine produced markup.
 
