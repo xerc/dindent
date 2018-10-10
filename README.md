@@ -206,7 +206,7 @@ The recommended way to use Dindent is through [Composer](https://getcomposer.org
 ```json
 {
     "require": {
-        "gajus/dindent": "2.0.*"
+        "schleuse/dindent": "2.*"
     }
 }
 ```
