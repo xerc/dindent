@@ -9,7 +9,8 @@ class Indenter {
     private
         $log = array(),
         $options = array(
-            'indentation_character' => '    '
+            'indentation_character' => '    ',
+            'logging' => false
         ),
         $inline_elements = array('b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp', 'var', 'a', 'bdo', 'br', 'img', 'span', 'sub', 'sup'),
         $temporary_replacements_script = array(),
@@ -121,12 +122,14 @@ class Indenter {
 
             foreach ($patterns as $pattern => $rule) {
                 if ($match = preg_match($pattern, $subject, $matches)) {
-                    $this->log[] = array(
-                        'rule' => $rules[$rule],
-                        'pattern' => $pattern,
-                        'subject' => $subject,
-                        'match' => $matches[0]
-                    );
+                    if ($this->options['logging']) {
+                        $this->log[] = array(
+                            'rule' => $rules[$rule],
+                            'pattern' => $pattern,
+                            'subject' => $subject,
+                            'match' => $matches[0]
+                        );
+                    }
 
                     $subject = mb_substr($subject, mb_strlen($matches[0]));
 
@@ -154,13 +157,15 @@ class Indenter {
             }
         } while ($match);
 
-        $interpreted_input = '';
-        foreach ($this->log as $e) {
-            $interpreted_input .= $e['match'];
-        }
+        if ($this->options['logging']) {
+            $interpreted_input = '';
+            foreach ($this->log as $e) {
+                $interpreted_input .= $e['match'];
+            }
 
-        if ($interpreted_input !== $input) {
-            throw new Exception\RuntimeException('Did not reproduce the exact input.');
+            if ($interpreted_input !== $input) {
+                throw new Exception\RuntimeException('Did not reproduce the exact input.');
+            }
         }
 
         $output = preg_replace('/(<(\w+)[^>]*>)\s*(<\/\2>)/u', '\\1\\3', $output);

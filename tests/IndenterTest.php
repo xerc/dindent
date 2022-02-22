@@ -51,9 +51,9 @@ class IndenterTest extends \PHPUnit\Framework\TestCase {
      * @dataProvider logProvider
      */
     public function testLog ($token, $log) {
-        $indenter = new \Gajus\Dindent\Indenter();
+        $indenter = new \Gajus\Dindent\Indenter([ 'logging' => true ]);
         $indenter->indent($token);
-        
+
         $this->assertSame(array($log), $indenter->getLog());
     }
 
