@@ -36,17 +36,6 @@ class IndenterTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame($expected_output, str_replace("\n", '', $indented));
     }
 
-
-    public function testIndentNestedInlineTags () {
-        $indenter = new \Gajus\Dindent\Indenter();
-
-        $indented = $indenter->indent('<span><strong><sup><a>foo</a></sup></strong></span>');
-
-        $expected_output = '<span><strong><sup><a>foo</a></sup></strong></span>';
-
-        $this->assertSame($expected_output, $indented);
-    }
-
     /**
      * @dataProvider logProvider
      */
