@@ -6,15 +6,14 @@ namespace Gajus\Dindent;
  * @license https://github.com/gajus/dindent/blob/master/LICENSE BSD 3-Clause
  */
 class Indenter {
-    private
-        $log = array(),
-        $options = array(
-            'indentation_character' => '    ',
-            'logging' => false
-        ),
-        $inline_elements = array('b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp', 'var', 'a', 'bdo', 'br', 'img', 'span', 'sub', 'sup'),
-        $temporary_replacements_script = array(),
-        $temporary_replacements_inline = array();
+    private $log = array();
+    private $options = array(
+                'indentation_character' => '    ',
+                'logging' => false
+            );
+    private $inline_elements = array('b', 'big', 'i', 's', 'small', 'q', 'u', 'abbr', 'cite', 'code', 'data', 'dfn', 'em', 'kbd', 'mark', 'strong', 'samp', 'time', 'var', 'bdi', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'wbr');
+    private $temporary_replacements_script = array();
+    private $temporary_replacements_inline = array();
 
     const ELEMENT_TYPE_BLOCK = 0;
     const ELEMENT_TYPE_INLINE = 1;
