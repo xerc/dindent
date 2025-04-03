@@ -19,6 +19,10 @@
 		"php": ">=5.6",
 		"ext-mbstring": "*"
 	},
+	"replace": {
+		"gajus/dindent": "*",
+		"indorock/dindent": "*"
+	},
 	"scripts": {
 		"test": "phpunit"
 	},
