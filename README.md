@@ -139,8 +139,8 @@ A block-level element occupies the entire space of its parent element (container
 
 Dindent identifies the following elements as "inline":
 
-* b, big, i, s, small, q, u
-* abbr, cite, code, data, dfn, em, kbd, mark, strong, samp, time, var
+* b, big, i, s, small, tt, q, u
+* abbr, acronym, cite, code, data, dfn, em, kbd, mark, strong, samp, time, var
 * a, bdi, bdo, br, img, span, sub, sup, wbr
 
 This is a subset of the inline elements defined in the [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics).
