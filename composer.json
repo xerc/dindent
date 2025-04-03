@@ -1,6 +1,6 @@
 {
 	"name": "schleuse/dindent",
-	"version": "2.5.1",
+	"version": "2.6.0",
 	"description": "Fork of gajus/dindent with various fixes from the community",
 	"keywords": ["HTML", "indent", "format"],
 	"homepage": "https://github.com/schleuse/dindent",
