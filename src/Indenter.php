@@ -11,7 +11,7 @@ class Indenter {
                 'indentation_character' => '    ',
                 'logging' => false
             );
-    private $inline_elements = array('b', 'big', 'i', 's', 'small', 'q', 'u', 'abbr', 'cite', 'code', 'data', 'dfn', 'em', 'kbd', 'mark', 'strong', 'samp', 'time', 'var', 'bdi', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'wbr');
+    private $inline_elements = array('b', 'big', 'i', 's', 'small', 'tt', 'q', 'u', 'abbr', 'acronym', 'cite', 'code', 'data', 'dfn', 'em', 'kbd', 'mark', 'strong', 'samp', 'time', 'var', 'a', 'bdi', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'wbr');
     private $temporary_replacements_script = array();
     private $temporary_replacements_inline = array();
 
