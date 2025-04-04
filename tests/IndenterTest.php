@@ -1,32 +1,15 @@
 <?php
+
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class IndenterTest extends \PHPUnit\Framework\TestCase {
-    /**
-     * @expectedException Gajus\Dindent\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unrecognized option.
-     */
-    public function testInvalidSetupOption () {
+    public function testInvalidSetupOption (): void {
+        $this->expectException(\Gajus\Dindent\Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unrecognized option.');
         new \Gajus\Dindent\Indenter(array('foo' => 'bar'));
     }
 
-    /**
-     * @expectedException Gajus\Dindent\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unrecognized element type.
-     */
-    public function testSetInvalidElementType () {
-        $indenter = new \Gajus\Dindent\Indenter();
-        $indenter->setElementType('foo', 'bar');
-    }
-
-    /*public function testSetElementTypeInline () {
-        $indenter = new \Gajus\Dindent\Indenter();
-        $indenter->setElementType('foo', \Gajus\Dindent\Indenter::ELEMENT_TYPE_BLOCK);
-
-        $output = $indenter->indent('<p><span>X</span></p>');
-
-        die(var_dump( $output ));
-    }*/
-
-    public function testIndentCustomCharacter () {
+    public function testIndentCustomCharacter (): void {
         $indenter = new \Gajus\Dindent\Indenter(array('indentation_character' => 'X'));
 
         $indented = $indenter->indent('<p><p></p></p>');
@@ -36,34 +19,30 @@ class IndenterTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame($expected_output, str_replace("\n", '', $indented));
     }
 
-    /**
-     * @dataProvider logProvider
-     */
-    public function testLog ($token, $log) {
+    #[DataProvider('logProvider')]
+    public function testLog ($token, $log): void {
         $indenter = new \Gajus\Dindent\Indenter([ 'logging' => true ]);
         $indenter->indent($token);
 
         $this->assertSame(array($log), $indenter->getLog());
     }
 
-    public function logProvider () {
-        return array(
-            array(
+    public static function logProvider(): array {
+        return [
+            [
                 '<p></p>',
-                array(
+                [
                     'rule' => 'NO',
                     'pattern' => '/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\\/(?:\\2)>)/',
                     'subject' => '<p></p>',
                     'match' => '<p></p>',
-                )
-            )
-        );
+                ]
+            ]
+        ];
     }
 
-    /**
-     * @dataProvider indentProvider
-     */
-    public function testIndent ($name) {
+    #[DataProvider('indentProvider')]
+    public function testIndent ($name): void {
         $indenter = new \Gajus\Dindent\Indenter();
 
         $input = file_get_contents(__DIR__ . '/sample/input/' . $name . '.html');
@@ -72,7 +51,7 @@ class IndenterTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame($expected_output, $indenter->indent($input));
     }
 
-    public function indentProvider () {
+    public static function indentProvider():array {
         return array_map(function ($e) {
             return array(pathinfo($e, \PATHINFO_FILENAME));
         }, glob(__DIR__ . '/sample/input/*.html'));
