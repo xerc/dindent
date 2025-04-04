@@ -8,6 +8,7 @@ namespace Gajus\Dindent;
  * @phpstan-type Options array{indentation_character: string, logging: boolean}
  */
 class Indenter {
+
     /**
      * @var LogEntry[]
      */
@@ -23,6 +24,7 @@ class Indenter {
 
     /**
      * @var string[]
+     * inline text semantic elements @ https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics
      */
     private array $inline_elements =  ['b', 'big', 'i', 's', 'small', 'tt', 'q', 'u', 'abbr', 'acronym', 'cite', 'code', 'data', 'dfn', 'em', 'kbd', 'mark', 'strong', 'samp', 'time', 'var', 'a', 'bdi', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'wbr'];
 
@@ -107,10 +109,11 @@ class Indenter {
                 '/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/' => MatchType::NoIndent,
                 // DOCTYPE
                 '/^<!([^>]*)>/' => MatchType::NoIndent,
-                // tag with implied closing
-                '/^<(input|link|meta|base|br|img|source|hr)([^>]*)>/' => MatchType::NoIndent,
-                // self closing SVG tags
-                '/^<(animate|stop|path|circle|line|polyline|rect|use)([^>]*)\/>/' => MatchType::NoIndent,
+                // tag with implied closing @ https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+                '/^<(area|base|br|col|embed|hr|img|input|link|meta|source|track|wbr)([^>]*)>/' => MatchType::NoIndent,
+                // (most) self closing SVG tags @ https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element#svg_elements_by_category
+                '/^<(animate|circle|ellipse|line|path|polygon|polyline|rect|stop|use)([^>]*)\/>/' => MatchType::NoIndent,
+
                 // opening tag
                 '/^<[^\/]([^>]*)>/' => MatchType::IndentIncrease,
                 // closing tag
