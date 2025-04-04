@@ -11,6 +11,8 @@ class Indenter {
                 'indentation_character' => '    ',
                 'logging' => false
             );
+
+    // inline text semantic elements @ https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics
     private $inline_elements = array('b', 'big', 'i', 's', 'small', 'tt', 'q', 'u', 'abbr', 'acronym', 'cite', 'code', 'data', 'dfn', 'em', 'kbd', 'mark', 'strong', 'samp', 'time', 'var', 'a', 'bdi', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'wbr');
     private $temporary_replacements_script = array();
     private $temporary_replacements_inline = array();
@@ -96,10 +98,10 @@ class Indenter {
                 '/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/' => static::MATCH_INDENT_NO,
                 // DOCTYPE
                 '/^<!([^>]*)>/' => static::MATCH_INDENT_NO,
-                // tag with implied closing
-                '/^<(input|link|meta|base|br|img|source|hr)([^>]*)>/' => static::MATCH_INDENT_NO,
-                // self closing SVG tags
-                '/^<(animate|stop|path|circle|line|polyline|rect|use)([^>]*)\/>/' => static::MATCH_INDENT_NO,
+                // tag with implied closing @ https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+                '/^<(area|base|br|col|embed|hr|img|input|link|meta|source|track|wbr)([^>]*)>/' => static::MATCH_INDENT_NO,
+                // (most) self closing SVG tags @ https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element#svg_elements_by_category
+                '/^<(animate|circle|ellipse|line|path|polygon|polyline|rect|stop|use)([^>]*)\/>/' => static::MATCH_INDENT_NO,
                 // opening tag
                 '/^<[^\/]([^>]*)>/' => static::MATCH_INDENT_INCREASE,
                 // closing tag
