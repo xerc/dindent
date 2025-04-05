@@ -1,9 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Gajus\Dindent;
 
 /**
  * @link https://github.com/gajus/dindent for the canonical source repository
  * @license https://github.com/gajus/dindent/blob/master/LICENSE BSD 3-Clause
+ *
  * @phpstan-type LogEntry array{rule: string, pattern: string, subject: string, match: string}
  * @phpstan-type Options array{indentation_character: string, logging: boolean}
  */
@@ -15,7 +19,7 @@ class Indenter
     private array $log = [];
 
     /**
-     * @var Options
+     * @var Options[]
      */
     private array $options = [
         'indentation_character' => '    ',
@@ -23,23 +27,15 @@ class Indenter
     ];
 
     /**
-     * @var string[]
-     * inline text semantic elements @ https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element#inline_text_semantics
      */
     private array $inline_elements =  ['b', 'big', 'i', 's', 'small', 'tt', 'q', 'u', 'abbr', 'acronym', 'cite', 'code', 'data', 'dfn', 'em', 'kbd', 'mark', 'strong', 'samp', 'time', 'var', 'a', 'bdi', 'bdo', 'br', 'img', 'span', 'sub', 'sup', 'wbr'];
 
-    /**
-     * @var list<string|null>
-     */
     private array $temporary_replacements_source = [];
-
-    /**
-     * @var list<string|null>
-     */
     private array $temporary_replacements_inline = [];
 
     /**
-     * @param Options $options
+     * @param Options[] $options
      */
     public function __construct (array $options = []) {
         foreach ($options as $name => $value) {
@@ -79,6 +75,9 @@ class Indenter
           '/(?<elm><(script|style)[^>]*>)(?<str>[\s\S]*?)(?<lf>\n?)\s*(?=<\/\2>)/i',
           function ($match) use (&$count): string
           {
+            if(empty($match['str'])) {
+              return $match[0];
+            }
             $this->temporary_replacements_source[] = $match;
             return $match['elm'].'ᐄᐄᐄ' . $count++ . 'ᐄᐄᐄ';
           },
@@ -97,6 +96,9 @@ class Indenter
           '/\s*(?<elm><(' . implode('|', $this->inline_elements) . ')[^>]*>)\s*(?<str>[^<]*?)\s*(?<clt><\/\2>)\s*/i',
           function ($match) use (&$count): string
           {
+            if(empty($match['str'])) {
+              return $match[0];
+            }
             $this->temporary_replacements_inline[] = sprintf(' %s%s%s ', $match['elm'], $match['str'], $match['clt']);
             return 'ᐃᐃᐃ' . $count++ . 'ᐃᐃᐃ';
           },
@@ -113,13 +115,16 @@ class Indenter
             $indentation_level = $next_line_indentation_level;
 
             $patterns = [
-                // block tag
-                '/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/' => MatchType::NoIndent,
+                // whitespace
+                '/^(\s+)/' => MatchType::Discard,
                 // DOCTYPE
                 '/^<!([^>]*)>/' => MatchType::NoIndent,
+
+                // block tag
+                '/^(<([a-z]+)(?:[^>]*)>(?:[^<]*)<\/(?:\2)>)/' => MatchType::NoIndent,
                 // tag with implied closing @ https://developer.mozilla.org/en-US/docs/Glossary/Void_element
                 '/^<(area|base|br|col|embed|hr|img|input|link|meta|source|track|wbr)([^>]*)>/' => MatchType::NoIndent,
-                // (most) self closing SVG tags @ https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element#svg_elements_by_category
+                // (some) self closing SVG tags @ https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element#svg_elements_by_category
                 '/^<(animate|circle|ellipse|line|path|polygon|polyline|rect|stop|use)([^>]*)\/>/' => MatchType::NoIndent,
 
                 // opening tag
@@ -128,8 +133,6 @@ class Indenter
                 '/^<\/([^>]*)>/' => MatchType::IndentDecrease,
                 // self-closing tag
                 '/^<(.+)\/>/' => MatchType::IndentDecrease,
-                // whitespace
-                '/^(\s+)/' => MatchType::Discard,
                 // text node
                 '/([^<]+)/' => MatchType::NoIndent
             ];
@@ -147,24 +150,24 @@ class Indenter
 
                     $subject = mb_substr($subject, mb_strlen($matches[0]));
 
-                    if ($rule === MatchType::Discard) {
-                        break;
+                    switch($rule) {
+                        case MatchType::Discard:
+                            break 2;
+
+                        case MatchType::IndentIncrease:
+                            $next_line_indentation_level++;
+                            break;
+
+                        case MatchType::IndentDecrease:
+                            $next_line_indentation_level--;
+                            $indentation_level--;
+                            break;
+
+                        case MatchType::NoIndent:
+                        default:
                     }
 
-                    if ($rule === MatchType::NoIndent) {
-
-                    } else if ($rule === MatchType::IndentDecrease) {
-                        $next_line_indentation_level--;
-                        $indentation_level--;
-                    } else {
-                        $next_line_indentation_level++;
-                    }
-
-                    if ($indentation_level < 0) {
-                        $indentation_level = 0;
-                    }
-
-                    $output .= str_repeat($this->options['indentation_character'], $indentation_level) . $matches[0] . "\n";
+                    $output .= str_repeat($this->options['indentation_character'], max(0, $indentation_level)) . $matches[0] . "\n";
 
                     break;
                 }
@@ -187,7 +190,7 @@ class Indenter
             $output = str_replace('ᐃᐃᐃ'.$i.'ᐃᐃᐃ', $original, $output);
         }
 
-        // Remove empty space between tags
+        // Remove empty space inside & between tags
         $output = preg_replace('/(<(\w+)[^>]*>)\s*(<\/\2>)|(?<=>) (?=<)/u', '$1$3', $output);
 
         // Restore `<script|style>` bodys
